@@ -37,10 +37,17 @@ typedef int GIT_SOCKET;
 # error GIT_USE_NSEC defined but unknown struct stat nanosecond type
 #endif
 
-#define p_utimes(f, t) utimes(f, t)
+#define p_utimes(f, t) 0
 
-#define p_readlink(a, b, c) readlink(a, b, c)
-#define p_symlink(o,n) symlink(o, n)
+GIT_INLINE(int) p_readlink(const char *a, const char *b, size_t c) {
+    (void)a;
+    (void)b;
+    (void)c;
+    errno = EINVAL;
+    return -1;
+}
+
+#define p_symlink(o,n) git_futils_fake_symlink(o, n)
 #define p_link(o,n) link(o, n)
 #define p_unlink(p) unlink(p)
 #define p_mkdir(p,m) mkdir(p, m)

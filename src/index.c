@@ -853,7 +853,7 @@ void git_index_entry__init_from_stat(
 	entry->mtime.nanoseconds = st->st_mtime_nsec;
 	entry->ctime.nanoseconds = st->st_ctime_nsec;
 #endif
-	entry->dev  = st->st_rdev;
+	entry->dev  = 0;
 	entry->ino  = st->st_ino;
 	entry->mode = (!trust_mode && S_ISREG(st->st_mode)) ?
 		git_index__create_mode(0666) : git_index__create_mode(st->st_mode);

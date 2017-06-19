@@ -342,7 +342,6 @@ static int verify_server_cert(SSL *ssl, const char *host)
 	unsigned char *peer_cn = NULL;
 	int matched = -1, type = GEN_DNS;
 	GENERAL_NAMES *alts;
-	struct in6_addr addr6;
 	struct in_addr addr4;
 	void *addr;
 	int i = -1, j, error = 0;
@@ -353,14 +352,9 @@ static int verify_server_cert(SSL *ssl, const char *host)
 	}
 
 	/* Try to parse the host as an IP address to see if it is */
-	if (p_inet_pton(AF_INET, host, &addr4)) {
+        if (inet_aton(host, &addr4) == 1) {
 		type = GEN_IPADD;
 		addr = &addr4;
-	} else {
-		if(p_inet_pton(AF_INET6, host, &addr6)) {
-			type = GEN_IPADD;
-			addr = &addr6;
-		}
 	}
 
 
