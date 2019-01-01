@@ -235,11 +235,11 @@ ELSE()
 ENDIF()
 
 # Include POSIX regex when it is required
-IF(WIN32 OR AMIGA OR CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)")
+# IF(WIN32 OR AMIGA OR CMAKE_SYSTEM_NAME MATCHES "(Solaris|SunOS)")
 	ADD_SUBDIRECTORY("${libgit2_SOURCE_DIR}/deps/regex" "${libgit2_BINARY_DIR}/deps/regex")
 	LIST(APPEND LIBGIT2_INCLUDES "${libgit2_SOURCE_DIR}/deps/regex")
 	LIST(APPEND LIBGIT2_OBJECTS $<TARGET_OBJECTS:regex>)
-ENDIF()
+# ENDIF()
 
 # Optional external dependency: http-parser
 FIND_PACKAGE(HTTP_Parser)
