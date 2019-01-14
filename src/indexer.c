@@ -462,20 +462,28 @@ static void hash_partially(git_indexer *idx, const uint8_t *data, size_t size)
 static int write_at(git_indexer *idx, const void *data, git_off_t offset, size_t size)
 {
 	git_file fd = idx->pack->mwf.fd;
+	size_t mmap_alignment;
+	size_t page_offset;
+	git_off_t page_start;
+	unsigned char *map_data;
+	git_map map;
+	int error;
 
 	assert(data && size);
 
-	//off_t old_seek = lseek(fd, 0, SEEK_CUR);
-	//if (old_seek == (off_t)(-1)) 
-	//	return -1;
+	if ((error = git__mmap_alignment(&mmap_alignment)) < 0)
+		return error;
 
-	if (lseek(fd, offset, SEEK_SET) == -1)
-		return -1;
+	/* the offset needs to be at the mmap boundary for the platform */
+	page_offset = offset % mmap_alignment;
+	page_start = offset - page_offset;
 
-	if (write(fd, data, size) == -1)
-		return -1;
+	if ((error = p_mmap(&map, page_offset + size, GIT_PROT_WRITE, GIT_MAP_SHARED, fd, page_start)) < 0)
+		return error;
 
-        //lseek(fd, old_seek, SEEK_SET);
+	map_data = (unsigned char *)map.data;
+	memcpy(map_data + page_offset, data, size);
+	p_munmap(&map);
 
 	return 0;
 }

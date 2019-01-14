@@ -40,7 +40,7 @@ static int git_sysdir_guess_system_dirs(git_buf *out)
 #ifndef GIT_WIN32
 static int get_passwd_home(git_buf *out, uid_t uid)
 {
-#ifdef __redox__
+#if defined(__redox__)
 	giterr_set(GITERR_OS, "redox does not support getpwuid_r");
 	return ENOSYS;
 #else

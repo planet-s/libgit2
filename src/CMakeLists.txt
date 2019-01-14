@@ -352,8 +352,6 @@ FILE(GLOB SRC_H
 	"${libgit2_SOURCE_DIR}/include/git2/*.h"
 	"${libgit2_SOURCE_DIR}/include/git2/sys/*.h")
 
-# Hack for Redox
-ADD_DEFINITIONS(-DNO_ADDRINFO -DNO_MMAP)
 # On Windows use specific platform sources
 IF (WIN32 AND NOT CYGWIN)
 	ADD_DEFINITIONS(-DWIN32 -D_WIN32_WINNT=0x0501)

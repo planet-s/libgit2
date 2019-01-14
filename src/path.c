@@ -261,12 +261,18 @@ int git_path_root(const char *path)
 {
 	int offset = 0;
 
+#if defined(__redox__)
         for (int i=0; path[i] != '\0' && path[i] != '/'; i++) {
             if (path[i] == ':') {
                 offset = i + 1;
                 break;
             }
         }
+#else
+	/* Does the root of the path look like a windows drive ? */
+	if (LOOKS_LIKE_DRIVE_PREFIX(path))
+		offset += 2;
+#endif
 
 #ifdef GIT_WIN32
 	/* Are we dealing with a windows network path? */
